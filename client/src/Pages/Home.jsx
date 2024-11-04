@@ -25,6 +25,11 @@ function Home() {
     fetchProdutos();
   }, []);
 
+
+    const handleUpdate = () => {
+    fetchProdutos();
+  };
+
   return (
     <>
       <div>
@@ -40,7 +45,7 @@ function Home() {
         <div className="container grid grid-cols-4 mx-auto mt-16">
           {produtos.length > 0 ? (
             produtos.map((produto) => (
-              <Card key={produto.id} produto={produto} />
+              <Card key={produto.id} produto={produto} onUpdate={handleUpdate} />
             ))
           ) : (
             <p>Nenhum produto encontrado</p>

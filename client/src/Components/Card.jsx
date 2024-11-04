@@ -1,36 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Input from "./Input/Input";
+import { Link } from "react-router-dom";
 
-const Card = ({ produto }) => {
+const Card = ({ produto, onUpdate }) => {
   const [modalDelete, setModalDelete] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
+
+  const [novoNome, setNovoNome] = useState("");
+  const [novaQuantidade, setNovaQuantidade] = useState(0);
+  const [novoTipo, setNovoTipo] = useState("");
+  const [novoPreco, setNovoPreco] = useState(0.0)
 
   function handleModalDelete() {
     setModalDelete(!modalDelete);
   }
 
-  function handleModalEdit() {
+  const handleModalEdit = () => {
     setModalEdit(!modalEdit);
-  }
+
+    if (!modalEdit) {
+      setNovoNome(produto.nome);
+      setNovaQuantidade(produto.quantidade);
+      setNovoTipo(produto.tipo);
+      setNovoPreco(produto.preco);
+    }
+  };
 
   if (!produto) {
     return null;
   }
 
-  const deleteProduct = async (e) => {
+  const deletarProduto = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:3000/product/delete/${produto.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
+      const response = await fetch(
+        `http://localhost:3000/product/delete/${produto.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      });
+      );
 
       if (response.ok) {
         console.log("Produto deletado");
-        setModalDelete(false); // Fecha o modal após a exclusão
-        // Aqui você pode adicionar uma lógica para atualizar a lista de produtos no componente pai
+        setModalDelete(false);
+        onUpdate(); // Notifica o componente pai
       } else {
         console.log("Erro ao deletar produto");
       }
@@ -38,6 +55,52 @@ const Card = ({ produto }) => {
       console.log("Erro ao deletar produto", error);
     }
   };
+
+
+  const editarProduto = async (e) => {
+    e.preventDefault();
+  
+    // Criar o objeto updateData apenas com valores alterados
+    const updateData = {};
+    if (novoNome !== produto.nome) updateData.nome = novoNome;
+    if (novoPreco !== produto.preco) updateData.preco = parseFloat(novoPreco); // Converte para float
+    if (novaQuantidade !== produto.quantidade) updateData.quantidade = parseInt(novaQuantidade); // Converte para int
+    if (novoTipo !== produto.tipo) updateData.tipo = novoTipo;
+  
+    if (Object.keys(updateData).length === 0) {
+      console.log("Nenhuma alteração feita");
+      setModalEdit(false);
+      return;
+    }
+  
+    try {
+      const response = await fetch(
+        `http://localhost:3000/product/update/${produto.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateData),
+        }
+      );
+  
+      if (response.ok) {
+        console.log("Produto editado");
+        setModalEdit(false);
+        onUpdate(); // Notifica o componente pai para atualizar a lista de produtos
+      } else {
+        console.log("Erro ao editar produto");
+      }
+    } catch (error) {
+      console.log("Erro ao editar produto", error);
+    }
+  };
+  
+ 
+
+
+  
 
   const { nome, preco, tipo } = produto;
 
@@ -94,12 +157,20 @@ const Card = ({ produto }) => {
           <div className="fixed inset-0 w-full h-full bg-black opacity-40"></div>
           <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-4 w-full max-w-lg">
             <div className="bg-white rounded-md shadow-lg px-4 py-6">
-              <h2 className="text-lg font-medium text-gray-800">Excluir Produto</h2>
+              <h2 className="text-lg font-medium text-gray-800">
+                Excluir Produto
+              </h2>
               <div className="mt-3 text-center sm:flex gap-2">
-                <button onClick={deleteProduct} className="w-full p-2.5 text-white bg-red-600 rounded-md">
+                <button
+                  onClick={deletarProduto}
+                  className="w-full p-2.5 text-white bg-red-600 rounded-md"
+                >
                   Excluir
                 </button>
-                <button onClick={handleModalDelete} className="w-full p-2.5 text-gray-800 rounded-md border">
+                <button
+                  onClick={handleModalDelete}
+                  className="w-full p-2.5 text-gray-800 rounded-md border"
+                >
                   Cancelar
                 </button>
               </div>
@@ -113,19 +184,46 @@ const Card = ({ produto }) => {
           <div className="fixed inset-0 w-full h-full bg-black opacity-40"></div>
           <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-4 w-full max-w-4xl">
             <div className="bg-white rounded-md shadow-lg px-6 py-6">
-              <h2 className="text-lg font-medium text-gray-800">Editar Produto</h2>
-              <form className="mx-auto">
-                <div className="relative z-0 w-full mb-5 group">
-                  <input type="text" className="form-input" placeholder="Novo Nome" required />
-                  <label className="form-label">Nome do Produto</label>
+              <h2 className="text-lg font-medium text-gray-800">
+                Editar Produto
+              </h2>
+
+              <form class="my-8 mx-auto">
+                <Input
+                  onChange={(e) => setNovoNome(e.target.value)}
+                  text={"Nome"}
+                />
+                <Input
+                  onChange={(e) => setNovoTipo(e.target.value)}
+                  text={"Tipo"}
+                />
+
+                <div class="grid md:grid-cols-2 md:gap-6">
+                  <Input
+                    onChange={(e) => setNovoPreco(e.target.value)}
+                    text={"Preço"}
+                  />
+                  <Input
+                    onChange={(e) => setNovaQuantidade(e.target.value)}
+                    text={"Quantidade"}
+                  />
                 </div>
-                <button type="submit" className="w-full p-2.5 text-white bg-orange-500 rounded-md">
-                  Salvar Alterações
-                </button>
-                <button onClick={handleModalEdit} className="w-full mt-2 p-2.5 text-gray-800 rounded-md border">
-                  Cancelar
-                </button>
+
+               
               </form>
+              <button
+                onClickCapture={editarProduto}
+                type="submit"
+                className="w-full p-2.5 text-white bg-orange-500 rounded-md"
+              >
+                Salvar Alterações
+              </button>
+              <button
+                onClick={handleModalEdit}
+                className="w-full mt-2 p-2.5 text-gray-800 rounded-md border"
+              >
+                Cancelar
+              </button>
             </div>
           </div>
         </div>
