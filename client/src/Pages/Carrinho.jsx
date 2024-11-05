@@ -1,5 +1,6 @@
 import React from "react";
 import CardCarrinho from "../Components/CardCarrinho";
+import { Link } from "react-router-dom";
 
 export default function Carrinho() {
   return (
@@ -32,7 +33,7 @@ export default function Carrinho() {
                 type="button"
                 class="text-sm px-4 py-2.5 w-full font-semibold tracking-wide bg-transparent text-gray-800 border border-gray-300 rounded-md"
               >
-                Continuar Comprando
+                <Link  to='/home'>Continuar Comprando</Link>
               </button>
             </div>
           </div>

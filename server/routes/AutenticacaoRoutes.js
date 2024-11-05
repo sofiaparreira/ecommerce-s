@@ -29,7 +29,7 @@ route.post("/register", async (req, res) => {
         res.status(201).json({ message: "Usuário cadastrado com sucesso!" });
 
     } catch (error) {
-        console.error('Erro ao registrar usuário:', error);
+        console.error('Erro ao registrar usuário:' + error);
         res.status(500).json({ error: "Erro ao registrar usuário" });
     }
 });
@@ -59,7 +59,7 @@ route.post('/login', async (req, res) => {
         
         res.status(200).json({ token, role: userExistente.role });
     } catch (error) {
-        console.error("Erro ao logar:", error.message);
+        console.error("Erro ao logar:" + error.message);
         res.status(500).json({ error: "Erro ao logar" });
     }
 });

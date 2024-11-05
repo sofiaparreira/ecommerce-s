@@ -25,7 +25,9 @@ const Cart = sequelize.define('Cart', {
         references: {
             model: User,
             key: 'id'
-        }
+        },
+        onUpdate: 'CASCADE', 
+        onDelete: 'CASCADE',
     },
 
     idProduto: {
@@ -33,7 +35,9 @@ const Cart = sequelize.define('Cart', {
         references: {
             model: Product,
             key: 'id'
-        }
+        },
+        onUpdate: 'CASCADE', 
+        onDelete: 'CASCADE',
     }
 
 })

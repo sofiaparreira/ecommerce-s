@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../Components/Input/Input";
 
 const Adicionar = () => {
@@ -7,6 +7,7 @@ const Adicionar = () => {
   const [tipo, setTipo] = useState("");
   const [preco, setPreco] = useState(0.0);
   const [quantidade, setQuantidade] = useState(0);
+  const navigate = useNavigate()
 
   const createProduct = async (e) => {
     e.preventDefault();
@@ -30,7 +31,7 @@ const Adicionar = () => {
 
       if (response.ok) {
         console.log("Produto adicionado com sucesso:", data);
-        alert("Produto cadastrado com sucesso!");
+        navigate("/home")
       } else {
         console.error("Erro ao cadastrar produto:", response.statusText);
       }
