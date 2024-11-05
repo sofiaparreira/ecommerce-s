@@ -62,10 +62,10 @@ const Card = ({ produto, onUpdate }) => {
   
     // Criar o objeto updateData apenas com valores alterados
     const updateData = {};
-    if (novoNome !== produto.nome) updateData.nome = novoNome;
-    if (novoPreco !== produto.preco) updateData.preco = parseFloat(novoPreco); // Converte para float
-    if (novaQuantidade !== produto.quantidade) updateData.quantidade = parseInt(novaQuantidade); // Converte para int
-    if (novoTipo !== produto.tipo) updateData.tipo = novoTipo;
+      updateData.nome = novoNome;
+      updateData.preco = parseFloat(novoPreco);
+      updateData.quantidade = parseInt(novaQuantidade);
+      updateData.tipo = novoTipo;
   
     if (Object.keys(updateData).length === 0) {
       console.log("Nenhuma alteração feita");
@@ -73,6 +73,7 @@ const Card = ({ produto, onUpdate }) => {
       return;
     }
   
+    console.log(updateData)
     try {
       const response = await fetch(
         `http://localhost:3000/product/update/${produto.id}`,
@@ -88,7 +89,7 @@ const Card = ({ produto, onUpdate }) => {
       if (response.ok) {
         console.log("Produto editado");
         setModalEdit(false);
-        onUpdate(); // Notifica o componente pai para atualizar a lista de produtos
+        onUpdate(); 
       } else {
         console.log("Erro ao editar produto");
       }
@@ -188,29 +189,31 @@ const Card = ({ produto, onUpdate }) => {
                 Editar Produto
               </h2>
 
-              <form class="my-8 mx-auto">
+              <form className="my-8 mx-auto">
                 <Input
                   onChange={(e) => setNovoNome(e.target.value)}
                   text={"Nome"}
+                  value={novoNome} 
                 />
                 <Input
                   onChange={(e) => setNovoTipo(e.target.value)}
                   text={"Tipo"}
+                  value={novoTipo}
                 />
 
-                <div class="grid md:grid-cols-2 md:gap-6">
+                <div className="grid md:grid-cols-2 md:gap-6">
                   <Input
                     onChange={(e) => setNovoPreco(e.target.value)}
                     text={"Preço"}
+                    value={novoPreco}
                   />
                   <Input
                     onChange={(e) => setNovaQuantidade(e.target.value)}
                     text={"Quantidade"}
-                  />
-                </div>
-
-               
-              </form>
+                    value={novaQuantidade} 
+            />
+          </div>
+        </form>
               <button
                 onClickCapture={editarProduto}
                 type="submit"
