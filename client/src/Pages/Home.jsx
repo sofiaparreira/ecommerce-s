@@ -1,9 +1,25 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import Card from "../Components/Card";
 import banner from "../assets/banner.jpg";
 import Header from "../Components/Header/Header";
 
 function Home() {
+
+  const navigate = useNavigate(); 
+  const role = localStorage.getItem("role");
+  
+  useEffect(() => {
+    if (role === "admin") {
+      navigate("/admin");
+    }
+
+    else (role !== "admin" || role !== "user"); {
+     navigate("/")
+    }
+  }, [role, navigate]); 
+
+
   const [produtos, setProdutos] = useState([]);
 
   const fetchProdutos = async () => {
