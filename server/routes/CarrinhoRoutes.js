@@ -68,3 +68,6 @@ router.post("/adicionar", async (req, res) => {
     console.log("Erro ao adicionar produto", error)
   }
 });
+
+
+module.exports = router
