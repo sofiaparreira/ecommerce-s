@@ -56,7 +56,8 @@ route.post('/login', async (req, res) => {
         }
 
         const token = jwt.sign({ id: userExistente.id, role: userExistente.role }, 'secreta', { expiresIn: '1h' }); 
-        res.status(200).json({ token });
+        
+        res.status(200).json({ token, role: userExistente.role });
     } catch (error) {
         console.error("Erro ao logar:", error.message);
         res.status(500).json({ error: "Erro ao logar" });

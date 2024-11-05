@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -8,30 +7,57 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [role, setRole] = useState('user');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const register = async (e) => {
     e.preventDefault();
+    setSuccessMessage('');
+    setErrorMessage('');
 
     try {
-      await axios.post('http://localhost:3000/user/register', {
-        email: email,
-        password: senha, 
-        role, 
+      const response = await fetch('http://localhost:3000/user/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          senha: senha,
+          role,
+        }),
       });
 
-      navigate("/");
+      if (response.ok) {
+        setSuccessMessage('Registro bem-sucedido! Você pode fazer login agora.');
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || 'Erro ao registrar. Tente novamente.');
+      }
     } catch (error) {
       console.error('Erro ao registrar', error);
+      setErrorMessage('Erro ao registrar. Tente novamente.');
     }
   };
 
   const handleRoleChange = (e) => {
+    setRole(e.target.checked ? 'admin' : 'user');
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form onSubmit={register} className="bg-white p-6 rounded-lg shadow-md w-96">
         <h2 className="text-2xl font-bold mb-6 text-center">Registrar</h2>
+
+        {successMessage && (
+          <p className="mt-4 text-green-600 text-center">{successMessage}</p>
+        )}
+        {errorMessage && (
+          <p className="mt-4 text-red-600 text-center">{errorMessage}</p>
+        )}
 
         <div className="mb-4">
           <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="email">
@@ -48,14 +74,14 @@ const Register = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="password">
+          <label className="block mb-2 text-sm font-medium text-gray-700" htmlFor="senha">
             Senha
           </label>
           <input
             onChange={(e) => setSenha(e.target.value)}
-            type="password"
-            id="password"
-            name="password"
+            type="senha"
+            id="senha"
+            name="senha"
             required
             className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
           />
@@ -80,6 +106,16 @@ const Register = () => {
         >
           Criar Conta
         </button>
+        
+        <p className="mt-4 text-center">
+          Já possui uma conta? 
+          <span 
+            onClick={() => navigate('/login')} 
+            className="text-blue-500 cursor-pointer hover:underline"
+          >
+            Faça login
+          </span>
+        </p>
       </form>
     </div>
   );

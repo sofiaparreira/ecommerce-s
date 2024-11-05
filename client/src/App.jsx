@@ -6,12 +6,14 @@ import Home from './Pages/Home';
 import HomeAdmin from './Pages/HomeAdmin';
 import Adicionar from './Pages/Adicionar';
 import Carrinho from './Pages/Carrinho';
+import Login from './Pages/auth/Login';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/admin" element={<HomeAdmin />} />
         <Route path="/admin/adicionar" element={<Adicionar />} />
