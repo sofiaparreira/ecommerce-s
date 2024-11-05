@@ -10,12 +10,8 @@ function Home() {
   const role = localStorage.getItem("role");
   
   useEffect(() => {
-    if (role === "admin") {
+    if (role !== "user") {
       navigate("/admin");
-    }
-
-    else (role !== "admin" || role !== "user"); {
-     navigate("/")
     }
   }, [role, navigate]); 
 
