@@ -7,6 +7,7 @@ import HomeAdmin from './Pages/HomeAdmin';
 import Adicionar from './Pages/Adicionar';
 import Carrinho from './Pages/Carrinho';
 import Login from './Pages/auth/Login';
+import MeusPedidos from './Pages/MeusPedidos';
 
 function App() {
   return (
@@ -18,11 +19,7 @@ function App() {
         <Route path="/admin" element={<HomeAdmin />} />
         <Route path="/admin/adicionar" element={<Adicionar />} />
         <Route path="/carrinho" element={<Carrinho />} />
-
-
-
-        
-
+        <Route path="/meusPedidos" element={<MeusPedidos />} />
       </Routes>
     </BrowserRouter>
   );

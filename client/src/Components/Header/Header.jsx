@@ -14,9 +14,15 @@ const Header = () => {
 
   return (
     <nav className='bg-sky-100 py-4'>
-      <ul className='flex justify-center'>
+      <ul className='flex justify-between px-8 '>
+        <span className='flex gap-8'>
+          <li><Link to='/home'>Home</Link></li>
+          <li><Link to='/carrinho'>Carrinho</Link></li>
+          <li><Link to='/carrinho'>Meus Pedidos</Link></li>
+        </span>
+
         <li className='text-xl font-bold'>JOIAS PRAGMA</li>
-        <Link to=''></Link>
+
         <button
             onClick={handleLogout}
             className="ml-4 px-4 py-2 text-white bg-red-500 rounded-lg"
