@@ -60,7 +60,7 @@ function Home() {
               <Card key={produto.id} produto={produto} onUpdate={handleUpdate} />
             ))
           ) : (
-            <p>Nenhum produto encontrado</p>
+            <p>Nenhum produto encontrado!</p>
           )}
         </div>
       </div>

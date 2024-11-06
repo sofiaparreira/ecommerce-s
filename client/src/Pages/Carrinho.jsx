@@ -3,6 +3,11 @@ import CardCarrinho from "../Components/CardCarrinho";
 import { Link } from "react-router-dom";
 
 export default function Carrinho() {
+
+  const UserId = localStorage.getItem("userId")
+  console.log(UserId)
+
+
   return (
     <div>
       <div class="font-sans md:max-w-4xl max-md:max-w-xl mx-auto bg-white py-4">

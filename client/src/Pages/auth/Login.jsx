@@ -29,6 +29,8 @@ function LoginPage() {
         
         localStorage.setItem('role', data.role);
         localStorage.setItem('isLoggedIn', 'true'); 
+        localStorage.setItem("userId", data.id);
+        console.log(localStorage.getItem("userId"))
 
         if (data.role === "admin") {
           console.log('Navegando para /admin');
