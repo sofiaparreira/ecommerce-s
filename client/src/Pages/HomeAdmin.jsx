@@ -6,9 +6,10 @@ import Header from "../Components/Header/Header";
 
 
 function HomeAdmin() {
-  const navigate = useNavigate(); // Crie a instância do useNavigate
+  const navigate = useNavigate(); 
   const role = localStorage.getItem("role");
   const [produtos, setProdutos] = useState([]);
+  const [search, setSearch] = useState('')
   
   useEffect(() => {
     if (role !== "admin") {
@@ -52,11 +53,28 @@ function HomeAdmin() {
           alt=""
         />
 
-        <div className="flex items-center justify-end mt-8 mx-8">
+        <div className="flex items-center justify-between mt-8 mx-60">
+        <select className="border border-sky-400 px-10 py-1 rounded" name="" id="">
+            <option value="" selected disabled>Filtrar Categoria</option>
+            <option value="">Colar</option>
+            <option value="">Anel</option>
+            <option value="">Pulseiras</option>
+            <option value="">Brincos</option>
+
+
+          </select>
+
+
           <Link className='px-8 py-2 text-gray-700 bg-sky-200 rounded-lg' to='/admin/adicionar'>
             Adicionar Produto
           </Link>
         </div>
+
+  
+        <div className="mx-60 mt-16">
+            <input onChange={(e) => setSearch(e.target.value)} type="search" className="border w-full rounded-md p-2" placeholder="Pesquisar Produto..." />
+          </div>
+
 
         <div className="container grid grid-cols-4 mx-auto mt-16">
           {produtos.length > 0 ? (
