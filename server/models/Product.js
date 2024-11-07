@@ -15,7 +15,7 @@ const Product = sequelize.define('Product', {
     },
 
     tipo: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM(anel, colar, Pulseiras, Brincos),
         allowNull: false
     },
     
