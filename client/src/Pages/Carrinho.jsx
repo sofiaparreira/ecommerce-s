@@ -41,11 +41,15 @@ export default function Carrinho() {
         return [];
       }
     };
-
     const calculateTotal = (items) => {
-      const totalAmount = items.reduce((acc, item) => acc + (item.preco * item.quantidade), 0);
+      const totalAmount = items.reduce((acc, item) => {
+        const preco = item.preco || 0; 
+        const quantidade = item.quantidade || 1; 
+        return acc + (preco * quantidade);
+      }, 0);
       setTotal(totalAmount);
     };
+    
 
     if (userId) fetchItems();
   }, [userId]);
