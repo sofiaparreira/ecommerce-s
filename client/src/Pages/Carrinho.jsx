@@ -14,16 +14,16 @@ export default function Carrinho() {
       try {
         const response = await fetch(`http://localhost:3000/carrinho/${userId}`);
         if (!response.ok) throw new Error("Erro ao buscar itens no carrinho");
-        
+
         const data = await response.json();
-        const productIds = data.map((item) => item.productId);
+        const productIds = data.map((item) => item.idProduto);
         const products = await fetchProducts(productIds);
-        
+
         const items = data.map((item) => {
-          const product = products.find((p) => p.id === item.productId);
-          return product ? { ...product, quantity: item.quantity } : null;
+          const product = products.find((p) => p.id === item.idProduto);
+          return product ? { ...product, quantidade: item.quantidade } : null;
         }).filter(Boolean);
-        
+
         setItemsCart(items);
         calculateTotal(items);
       } catch (error) {
@@ -33,7 +33,7 @@ export default function Carrinho() {
 
     const fetchProducts = async (productIds) => {
       try {
-        const response = await fetch("http://localhost:3000/produtos");
+        const response = await fetch("http://localhost:3000/product");
         const allProducts = await response.json();
         return allProducts.filter((product) => productIds.includes(product.id));
       } catch (error) {
@@ -43,7 +43,7 @@ export default function Carrinho() {
     };
 
     const calculateTotal = (items) => {
-      const totalAmount = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+      const totalAmount = items.reduce((acc, item) => acc + (item.preco * item.quantidade), 0);
       setTotal(totalAmount);
     };
 
@@ -62,8 +62,8 @@ export default function Carrinho() {
               {itemsCart.length === 0 ? (
                 <p>Seu carrinho está vazio.</p>
               ) : (
-                itemsCart.map((item) => (
-                  <CardCarrinho key={item.id} product={item} />
+                itemsCart.map((product) => (
+                  <CardCarrinho key={product.id} product={product} />
                 ))
               )}
             </div>

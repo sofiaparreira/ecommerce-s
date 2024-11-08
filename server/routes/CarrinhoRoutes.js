@@ -51,20 +51,21 @@ router.post("/adicionar", async (req, res) => {
       where: { idUsuario, idProduto },
     });
 
-    if (!produtoExiste) {
-        await Cart.create({
-            idUsuario,
-            idProduto,
-            quantidade,
-            precoTotal:  produto.preco * quantidade
-        })
-      return res
-        .status(201)
-        .json({ message: "Produto adicionado ao carrinho com sucesso" });
+    if (produtoExiste) {
+      produtoExiste.quantidade += quantidade;
+      produtoExiste.precoTotal = produtoExiste.quantidade + produto.preco
+      await produtoExiste.save()
+       
     } else {
-        produtoExiste.quantidade += quantidade;
-        produtoExiste.precoTotal = produtoExiste.quantidade + produto.preco
-        await produtoExiste.save()
+      await Cart.create({
+        idUsuario,
+        idProduto,
+        quantidade,
+        precoTotal:  produto.preco * quantidade
+    })
+  return res
+    .status(201)
+    .json({ message: "Produto adicionado ao carrinho com sucesso" });
     }
   } catch (error) {
     console.log("Erro ao adicionar produto", error)
