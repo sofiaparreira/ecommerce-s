@@ -72,5 +72,29 @@ router.post("/adicionar", async (req, res) => {
   }
 });
 
+router.delete('/:idUsuario/:idProduto', async (req, res) => {
+  const { idUsuario, idProduto } = req.params;
+
+  try {
+    const usuario = await User.findByPk(idUsuario)
+    
+    
+    if(!usuario) {
+      return res.status(404).json({ message: "Usuário não foi encontrado" });
+    }
+
+    const produtoCarrinho = await Cart.findOne({where: {idUsuario, idProduto}})
+    if(!produtoCarrinho) {
+      return res.status(404).json({ error: 'Produto não encontrado no carrinho'})
+    }
+
+    await produtoCarrinho.destroy() 
+    const atualizandoCarrinho = await Cart.findAll({where: {idUsuario}})
+    res.status(200).json({message: "Produto deletado"}, atualizandoCarrinho)
+  } catch (error) {
+    console.log('Erro ao deletar produto', error)
+  }
+})
+
 
 module.exports = router

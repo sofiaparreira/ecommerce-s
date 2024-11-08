@@ -54,6 +54,25 @@ export default function Carrinho() {
     if (userId) fetchItems();
   }, [userId]);
 
+
+  const handleDeletarItem = async (idProduto) => {
+    try {
+      const response = await fetch(`http://localhost:3000/carrinho/${userId}/${idProduto}`, {
+        method: "DELETE",
+      });
+  
+      if (response.ok) {
+        setItemsCart((prevItems) => prevItems.filter((item) => item.id !== idProduto));
+      } else {
+        const errorMessage = await response.text();
+        console.error("Erro ao deletar produto:", errorMessage);
+      }
+    } catch (error) {
+      console.error("Erro ao deletar produto:", error);
+    }
+  };
+  
+
   return (
     <div>
       <div className="font-sans md:max-w-4xl max-md:max-w-xl mx-auto bg-white py-4">
@@ -67,7 +86,7 @@ export default function Carrinho() {
                 <p>Seu carrinho está vazio.</p>
               ) : (
                 itemsCart.map((product) => (
-                  <CardCarrinho key={product.id} product={product} />
+                  <CardCarrinho onDelete={handleDeletarItem} key={product.id} product={product} />
                 ))
               )}
             </div>
