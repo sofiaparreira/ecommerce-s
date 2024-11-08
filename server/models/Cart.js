@@ -10,10 +10,8 @@ const Cart = sequelize.define('Cart', {
         primaryKey: true,
         autoIncrement: true
     },
-    nome: {
-        type: DataTypes.STRING
-    },
-    preco: {
+
+    precoTotal: {
         type: DataTypes.DECIMAL(10, 2)
     },
     quantidade: {
@@ -42,25 +40,9 @@ const Cart = sequelize.define('Cart', {
 
 })
 
-Cart.belongsTo(User, {
-    foreignKey: 'idUsuario',
-    as: 'user'
-})
-
-User.hasMany(Cart, {
-    foreignKey: 'idUsuario',
-    as: 'carts'            
-});
-
-
-Cart.belongsTo(Product, {
-    foreignKey: 'idProduto',
-    as: 'products'
-})
-
-Product.hasMany(Cart, {
-    foreignKey: 'idProduto',
-    as: 'carts'            
-});
+Cart.belongsTo(User, { foreignKey: 'idUsuario '})
+Cart.belongsTo(Product, { foreignKey:  'idProduto '})
+User.hasMany(Cart, { foreignKey: 'idUsuario' });
+Product.hasMany(Cart, { foreignKey: 'idProduto' });
 
 module.exports = Cart

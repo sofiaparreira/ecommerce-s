@@ -15,7 +15,7 @@ const Product = sequelize.define('Product', {
     },
 
     tipo: {
-        type: DataTypes.ENUM(anel, colar, Pulseiras, Brincos),
+        type: DataTypes.ENUM('Anel', 'Colar', 'Pulseiras', 'Brincos'),
         allowNull: false
     },
     

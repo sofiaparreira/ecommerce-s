@@ -3,32 +3,34 @@ const User = require("../models/User");
 const Product = require("../models/Product");
 const Cart = require("../models/Cart");
 
+
 const router = express.Router();
 
-router.get("/:idUsuario", async (req, res) => {
-  const { idUsuario } = req.params;
+router.get('/:idUsuario', async (req,res) => {
+  const { idUsuario } = req.params
 
   try {
-    const usuario = await User.findByPk(idUsuario);
-    if (!usuario) {
-      return res.status(422).json({ message: "Usuário não encontrado" });
-    }
+      const user = await User.findByPk(idUsuario)
+      if(!user) {
+          return res.status(404).json({ message: 'User not found' })
+      }
 
-    const produtos = await Product.findAll({
-      where: { idUsuario },
-      include: {
-        model: Product,
-        attributes: ["id", "nome", "tipo", "preco", "quantidade"],
-      },
-    });
-
-    res.status(200).json(produtos);
+      const items = await Cart.findAll({
+          where: { idUsuario },
+          include: {
+              model: Product,
+              attributes: ['id', 'nome', 'tipo', 'preco', 'quantidade']
+          }
+      })
+      res.status(200).json(items)
   } catch (error) {
-    console.log("Erro  ao buscar produtos do usuário" + error);
+      console.error("Error fetching cart items: ", error)
+      res.status(500).json({ message: 'Error fetching cart items' })
   }
-});
 
-//passa o id usuário aqui tbm?? pesquisar
+})
+
+
 router.post("/adicionar", async (req, res) => {
   const { idUsuario, idProduto, quantidade } = req.body;
 
@@ -54,14 +56,14 @@ router.post("/adicionar", async (req, res) => {
             idUsuario,
             idProduto,
             quantidade,
-            precoSoma:  produto.preco * quantidade
+            precoTotal:  produto.preco * quantidade
         })
       return res
         .status(201)
         .json({ message: "Produto adicionado ao carrinho com sucesso" });
     } else {
         produtoExiste.quantidade += quantidade;
-        produtoExiste.precoSoma = produtoExiste.quantidade + produto.preco
+        produtoExiste.precoTotal = produtoExiste.quantidade + produto.preco
         await produtoExiste.save()
     }
   } catch (error) {

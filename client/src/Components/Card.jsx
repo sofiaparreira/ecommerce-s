@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Input from "./Input/Input";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 
 const Card = ({ produto, onUpdate }) => {
   const [modalDelete, setModalDelete] = useState(false);
@@ -10,6 +13,35 @@ const Card = ({ produto, onUpdate }) => {
   const [novaQuantidade, setNovaQuantidade] = useState(0);
   const [novoTipo, setNovoTipo] = useState("");
   const [novoPreco, setNovoPreco] = useState(0.0)
+
+
+  const userID = localStorage.getItem("userId");
+  const navigate = useNavigate();
+
+  console.log("O ID DO USUARIO É:", userID);
+
+  const handleAddToCart = async () => {
+    try {
+      const response = await axios.post("http://localhost:3000/carrinho/adicionar", {
+        idUsuario: userID, 
+        idProduto: produto.id, 
+        quantity: 1,
+      });
+      console.log(`Product added successfully no id ${userID}`);
+    } catch (error) {
+      if (error.response && error.response.data) {
+        console.error("Error adding product to cart:", error.response.data);
+        alert(`Error: ${error.response.data.message || "Unable to add to cart"}`);
+      } else if (error.request) {
+        console.error("Network error or server did not respond:", error.message);
+        alert("Network error: Could not connect to server.");
+      } else {
+        console.error("Unexpected error:", error.message);
+        alert("An unexpected error occurred.");
+      }
+    }
+  };
+
 
   function handleModalDelete() {
     setModalDelete(!modalDelete);
@@ -148,7 +180,7 @@ const Card = ({ produto, onUpdate }) => {
             {tipo}
           </span>
         </div>
-        <button className="flex items-center justify-center rounded-md bg-sky-100 px-5 py-2.5 text-center text-sm font-medium text-sky-800 hover:bg-sky-200 duration-200 focus:outline-none focus:ring-4 focus:ring-blue-300">
+        <button onClick={handleAddToCart} className="flex items-center justify-center rounded-md bg-sky-100 px-5 py-2.5 text-center text-sm font-medium text-sky-800 hover:bg-sky-200 duration-200 focus:outline-none focus:ring-4 focus:ring-blue-300">
           Adicionar no Carrinho
         </button>
       </div>
